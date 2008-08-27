@@ -5,7 +5,7 @@ OPENFIRE_HOME="/usr/share/openfire"
 
 # If there is a different user you would like to run openfire as,
 # change the following line.
-OPENFIRE_USER="openfire"
+#OPENFIRE_USER="openfire"
 
 # If you wish to change the location of the openfire pid file,
 # change the following line.
@@ -16,7 +16,7 @@ OPENFIRE_PIDFILE="/var/run/openfire.pid"
 # openfire itself.  If you want to change the location of openfire's own
 # logs, see the system property 'log.directory'.  If this is not set,
 # it will default to $OPENFIRE_HOME/logs.
-OPENFIRE_LOGDIR="/var/log/openfire"
+#OPENFIRE_LOGDIR="/var/log/openfire"
 
 # If you wish to set any specific options to pass to the JVM, you can
 # set them with the following variable.
@@ -24,4 +24,4 @@ OPENFIRE_LOGDIR="/var/log/openfire"
 
 # If you wish to override the auto-detected JAVA_HOME variable, uncomment
 # and change the following line.
-JAVA_HOME="/usr/lib/java"
+JAVA_HOME="/usr/lib/jvm/java"
