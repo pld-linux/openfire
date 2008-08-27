@@ -4,11 +4,12 @@
 # - PLDize at all...
 Summary:	Openfire XMPP Server
 Name:		openfire
-Version:	3.5.2
+Version:	3.6.0
 Release:	0.1
 # Source0 URL: http://www.igniterealtime.org/downloads/download-landing.jsp?file=openfire/openfire_src_3_5_2.zip
 Source0:	%{name}-%{version}.tar.gz
-# Source0-md5:	baf4ba4d9a72a936ddc82f3ce44c2cbe	
+# Source0-md5:	68c7938b3912367c9459329e933b7c99
+Source1:	%{name}.sysconfig
 License:	GPL
 Group:		Applications/Communications
 URL:		http://www.igniterealtime.org/
@@ -25,6 +26,11 @@ This particular release includes a bundled JRE.
 
 %prep
 %setup -q -n %{name}_src
+cp %{SOURCE1} .
+
+%if "%{_lib}" == "lib64"
+%{__sed} -i -e 's/lib/lib64/' openfire.sysconfig
+%endif
 
 %build
 cd build
@@ -46,7 +52,7 @@ install $RPM_BUILD_ROOT%{_datadir}/openfire/bin/extra/redhat/openfire $RPM_BUILD
 chmod 755 $RPM_BUILD_ROOT%{_datadir}/openfire/bin/openfire.sh
 # Set up the sysconfig file.
 install -d $RPM_BUILD_ROOT/etc/sysconfig
-install $RPM_BUILD_ROOT%{_datadir}/openfire/bin/extra/redhat/openfire-sysconfig $RPM_BUILD_ROOT/etc/sysconfig/openfire
+install openfire.sysconfig $RPM_BUILD_ROOT/etc/sysconfig/openfire
 # Copy over the i18n files
 cp -R resources/i18n $RPM_BUILD_ROOT%{_datadir}/openfire/resources/i18n
 # Make sure scripts are executable
