@@ -16,6 +16,7 @@ URL:		http://www.igniterealtime.org/
 BuildRequires:	ant
 BuildRequires:	java-sun
 Requires:	java-sun
+Requires:	java-sun-jre-X11
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -49,8 +50,6 @@ cp -R target/openfire $RPM_BUILD_ROOT%{_datadir}
 # Set up the init script.
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d
 install $RPM_BUILD_ROOT%{_datadir}/openfire/bin/extra/redhat/openfire $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/openfire
-# Make the startup script executable.
-chmod 755 $RPM_BUILD_ROOT%{_datadir}/openfire/bin/openfire.sh
 # Set up the sysconfig file.
 install -d $RPM_BUILD_ROOT/etc/sysconfig
 install openfire.sysconfig $RPM_BUILD_ROOT/etc/sysconfig/openfire
@@ -85,7 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.html LICENSE.html changelog.html documentation/
 %attr(750, daemon, daemon) %dir %{_datadir}/openfire
 %dir %{_datadir}/openfire/bin
-%{_datadir}/openfire/bin/openfire.sh
+%attr(755,root,root) %{_datadir}/openfire/bin/openfire.sh
 %{_datadir}/openfire/bin/openfirectl
 %config(noreplace) %{_datadir}/openfire/bin/embedded-db.rc
 %{_datadir}/openfire/bin/embedded-db-viewer.sh
