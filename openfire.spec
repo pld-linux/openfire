@@ -4,11 +4,11 @@
 # - PLDize at all...
 Summary:	Openfire XMPP Server
 Name:		openfire
-Version:	3.6.1
+Version:	3.6.2
 Release:	0.1
 # Source0 URL: http://www.igniterealtime.org/downloads/download-landing.jsp?file=openfire/openfire_src_3_6_0a.tar.gz
 Source0:	%{name}-%{version}.tar.gz
-# Source0-md5:	3dc742b91ea49a7fd33ec36f18b6f9dc
+# Source0-md5:	9acd78e1e23f940dcba56037fcc7baad
 Source1:	%{name}.sysconfig
 License:	GPL
 Group:		Applications/Communications
