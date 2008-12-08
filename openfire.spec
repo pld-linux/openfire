@@ -5,7 +5,7 @@
 Summary:	Openfire XMPP Server
 Name:		openfire
 Version:	3.6.2
-Release:	0.1
+Release:	0.2
 # Source0 URL: http://www.igniterealtime.org/downloads/download-landing.jsp?file=openfire/openfire_src_3_6_0a.tar.gz
 Source0:	%{name}-%{version}.tar.gz
 # Source0-md5:	9acd78e1e23f940dcba56037fcc7baad
@@ -44,14 +44,13 @@ cd ..
 rm -rf $RPM_BUILD_ROOT
 # Prep the install location.
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_datadir}/openfire
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/rc.d/init.d,%{_sysconfdir}/%{name},/etc/sysconfig,%{_datadir}/%{name},/var/log/%{name}}
 # Copy over the main install tree.
 cp -R target/openfire $RPM_BUILD_ROOT%{_datadir}
+rm -rf  $RPM_BUILD_ROOT%{_datadir}/openfire/logs
 # Set up the init script.
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d
 install $RPM_BUILD_ROOT%{_datadir}/openfire/bin/extra/redhat/openfire $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/openfire
 # Set up the sysconfig file.
-install -d $RPM_BUILD_ROOT/etc/sysconfig
 install openfire.sysconfig $RPM_BUILD_ROOT/etc/sysconfig/openfire
 # Copy over the i18n files
 cp -R resources/i18n $RPM_BUILD_ROOT%{_datadir}/openfire/resources/i18n
@@ -70,6 +69,14 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/openfire/resources/nativeAuth/win32-x86
 rm -f $RPM_BUILD_ROOT%{_datadir}/openfire/lib/*.dll
 rm -rf $RPM_BUILD_ROOT%{_datadir}/openfire/resources/spank
 
+# Symlinks for PLD
+ln -s %{_datadir}/openfire/conf $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/resources
+ln -s %{_datadir}/openfire/resources/security $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/resources
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/bin
+ln -s %{_datadir}/openfire/bin/embedded-db.rc $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/bin
+ln -s /var/log/openfire $RPM_BUILD_ROOT%{_datadir}/openfire/logs
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -86,10 +93,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/openfire/bin
 %attr(755,root,root) %{_datadir}/openfire/bin/openfire.sh
 %{_datadir}/openfire/bin/openfirectl
-%config(noreplace) %{_datadir}/openfire/bin/embedded-db.rc
+%config(noreplace) %verify(not md5 mtime size) %{_datadir}/openfire/bin/embedded-db.rc
 %{_datadir}/openfire/bin/embedded-db-viewer.sh
 %dir %{_datadir}/openfire/conf
-%config(noreplace) %{_datadir}/openfire/conf/openfire.xml
+%config(noreplace) %verify(not md5 mtime size) %{_datadir}/openfire/conf/openfire.xml
 %dir %{_datadir}/openfire/lib
 %{_datadir}/openfire/lib/*.jar
 %dir %{_datadir}/openfire/logs
@@ -109,8 +116,15 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/openfire/resources/nativeAuth/linux-i386
 %{_datadir}/openfire/resources/nativeAuth/linux-i386/*
 %dir %{_datadir}/openfire/resources/security
-%config(noreplace) %{_datadir}/openfire/resources/security/keystore
-%config(noreplace) %{_datadir}/openfire/resources/security/truststore
-%config(noreplace) %{_datadir}/openfire/resources/security/client.truststore
+%config(noreplace) %verify(not md5 mtime size) %{_datadir}/openfire/resources/security/keystore
+%config(noreplace) %verify(not md5 mtime size) %{_datadir}/openfire/resources/security/truststore
+%config(noreplace) %verify(not md5 mtime size) %{_datadir}/openfire/resources/security/client.truststore
 %attr(754,root,root) /etc/rc.d/init.d/openfire
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/openfire
+%attr(770,root,root) %dir %{_var}/log/%{name}
+# Symlinks for PLD
+%dir %{_sysconfdir}/openfire
+%dir %{_sysconfdir}/openfire/bin
+%{_sysconfdir}/openfire/bin/embedded-db.rc
+%dir %{_sysconfdir}/openfire/conf
+%dir %{_sysconfdir}/openfire/resources/security
