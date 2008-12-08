@@ -127,4 +127,5 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/openfire/bin
 %{_sysconfdir}/openfire/bin/embedded-db.rc
 %dir %{_sysconfdir}/openfire/conf
+%dir %{_sysconfdir}/openfire/resources
 %dir %{_sysconfdir}/openfire/resources/security
