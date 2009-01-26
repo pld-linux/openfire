@@ -10,6 +10,7 @@ Release:	0.1
 Source0:	openfire_src_3_6_3.tar.gz
 # Source0-md5:	914b4af58dab8e26c873c9ae8a2d72cd
 Source1:	%{name}.sysconfig
+Source2:	%{name}.init
 License:	GPL
 Group:		Applications/Communications
 URL:		http://www.igniterealtime.org/
@@ -49,7 +50,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/rc.d/init.d,%{_sysconfdir}/%{name},/et
 cp -R target/openfire $RPM_BUILD_ROOT%{_datadir}
 rm -rf  $RPM_BUILD_ROOT%{_datadir}/openfire/logs
 # Set up the init script.
-install $RPM_BUILD_ROOT%{_datadir}/openfire/bin/extra/redhat/openfire $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/openfire
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/openfire
 # Set up the sysconfig file.
 install openfire.sysconfig $RPM_BUILD_ROOT/etc/sysconfig/openfire
 # Copy over the i18n files
