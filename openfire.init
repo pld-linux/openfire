@@ -9,6 +9,11 @@
 # config: /etc/sysconfig/openfire
 # pidfile: /var/run/openfire.pid
 # 
+
+#####
+# Begin setup work
+#####
+
 # Source function library
 . /etc/rc.d/init.d/functions
 
@@ -92,33 +97,29 @@ export JAVA_HOME JAVACMD
 # Lastly, prepare the full command that we are going to run.
 OPENFIRE_RUN_CMD="${JAVACMD} -server ${OPENFIRE_OPTS} -classpath \"${LOCALCLASSPATH}\" -jar \"${OPENFIRE_LIB}/startup.jar\""
 
+#####
+# End setup work
+#####
+
+
 
 start() {
-	OLD_PWD=`pwd`
-	cd $OPENFIRE_LOGDIR
-
-	msg_starting openfire
-
-	rm -f nohup.out
-	su -s /bin/sh -c "nohup $OPENFIRE_RUN_CMD > $OPENFIRE_LOGDIR/nohup.out 2>&1 &" $OPENFIRE_USER
-	RETVAL=$?
-	PID=`ps ax --width=1000 | grep openfire | grep startup.jar | awk '{print $1}'`
-
-	if [ $RETVAL -eq 0 -a ! -z "$PID" -a ! -z "$OPENFIRE_PIDFILE" ]; then
-		echo $PID > $OPENFIRE_PIDFILE
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/openfire ]; then
+		msg_starting openfire
+		daemon --fork --user $OPENFIRE_USER $OPENFIRE_RUN_CMD 
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/openfire
+	else
+		msg_already_running openfire
 	fi
-
-	[ $RETVAL -eq 0 -a -d /var/lock/subsys ] && touch /var/lock/subsys/openfire
-
-	sleep 1 # allows prompt to return
-	cd $OLD_PWD
 }
 
 stop() {
         # Stop daemons.
         if [ -f /var/lock/subsys/openfire ]; then
                 msg_stopping openfire
-		kill -9 `cat $OPENFIRE_PIDFILE`
+		killproc openfire
                 RETVAL=$?
                 rm -f /var/lock/subsys/openfire
         else
@@ -136,24 +137,6 @@ condrestart() {
 	[ -e "/var/lock/subsys/openfire" ] && restart
 	return 0
 }
-
-status() {
-	pid=`cat $OPENFIRE_PIDFILE 2>&1`
-	if [ "$?" = "1" ]; then
-		echo "openfire is not running"
-		RETVAL=0
-	else 
-		ps -p $pid > /dev/null 2>&1
-		if [ "$?" = "0" ]; then 
-			echo "openfire is running"
-			RETVAL=0
-		else 
-			echo "openfire is not running"
-			RETVAL=0
-		fi
-	fi
-}
-
 
 # Handle how we were called.
 case "$1" in
@@ -173,7 +156,7 @@ case "$1" in
 		restart
 		;;
 	status) 
-		status
+		status openfire
 		;;
 	*)
 		echo "Usage $0 {start|stop|restart|status|condrestart|reload}"
