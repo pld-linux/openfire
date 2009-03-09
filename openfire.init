@@ -95,7 +95,8 @@ fi
 export JAVA_HOME JAVACMD
 
 # Lastly, prepare the full command that we are going to run.
-OPENFIRE_RUN_CMD="${JAVACMD} -server ${OPENFIRE_OPTS} -classpath \"${LOCALCLASSPATH}\" -jar \"${OPENFIRE_LIB}/startup.jar\""
+# OPENFIRE_RUN_CMD="${JAVACMD} -server ${OPENFIRE_OPTS} -classpath \"${LOCALCLASSPATH}\" -jar \"${OPENFIRE_LIB}/startup.jar\""
+JAVA_ARGS="-server ${OPENFIRE_OPTS} -classpath ${LOCALCLASSPATH} -jar ${OPENFIRE_LIB}/startup.jar"
 
 #####
 # End setup work
@@ -107,9 +108,17 @@ start() {
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/openfire ]; then
 		msg_starting openfire
-		daemon --fork --user $OPENFIRE_USER $OPENFIRE_RUN_CMD 
+		/sbin/start-stop-daemon -S --pidfile $OPENFIRE_PIDFILE -m -b --user $OPENFIRE_USER -x $JAVACMD -- $JAVA_ARGS
 		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/openfire
+		if [ $RETVAL -eq 0 ]; then
+		       	touch /var/lock/subsys/openfire
+			log_success "openfire startup"
+			ok
+		else
+			log_fail "openfire startup"
+			fail
+		fi
+
 	else
 		msg_already_running openfire
 	fi
@@ -119,7 +128,8 @@ stop() {
         # Stop daemons.
         if [ -f /var/lock/subsys/openfire ]; then
                 msg_stopping openfire
-		killproc openfire
+		# /sbin/start-stop-daemon -K -R 5 --pidfile $OPENFIRE_PIDFILE openfire
+		killproc --pidfile $OPENFIRE_PIDFILE openfire
                 RETVAL=$?
                 rm -f /var/lock/subsys/openfire
         else
