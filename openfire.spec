@@ -1,15 +1,7 @@
 #
 # TODO:
-# - PLDize init script
 # - PLDize at all...
-# - see %desc, does it really include jre?
 # - missing service restarts in post?
-# Conditional build:
-%if "%{pld_release}" == "ti"
-%bcond_without	java_sun	# build with gcj
-%else
-%bcond_with	java_sun	# build with java-sun
-%endif
 #
 %define		ver	%(echo %{version} | tr . _)
 Summary:	Openfire XMPP Server
@@ -27,14 +19,13 @@ URL:		http://www.igniterealtime.org/
 BuildRequires:	ant
 BuildRequires:	java-commons-el
 BuildRequires:	java-commons-httpclient
-%{!?with_java_sun:BuildRequires:        java-gcj-compat-devel}
 BuildRequires:	java-servletapi5
-%{?with_java_sun:BuildRequires: java-sun}
+BuildRequires:	java-sun
 Buildrequires:	java-mail
 BuildRequires:	java-commons-lang
 BuildRequires:	java-commons-logging
 BuildRequires:	java-jdom
-BuildRequires:	rpm >= 4.4.9-56
+BuildRequires:	java-qdox
 BuildRequires:	tomcat-jasper
 Requires:	java-sun
 Requires:	java-sun-jre-X11
@@ -45,8 +36,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Openfire is a leading Open Source, cross-platform IM server based on
 the XMPP (Jabber) protocol. It has great performance, is easy to setup
 and use, and delivers an innovative feature set.
-
-This particular release includes a bundled JRE.
 
 %prep
 %setup -q -n %{name}_src
