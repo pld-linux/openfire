@@ -2,6 +2,13 @@
 # TODO:
 # - PLDize init script
 # - PLDize at all...
+# Conditional build:
+%if "%{pld_release}" == "ti"
+%bcond_without	java_sun	# build with gcj
+%else
+%bcond_with	java_sun	# build with java-sun
+%endif
+#
 Summary:	Openfire XMPP Server
 Name:		openfire
 Version:	3.6.4
@@ -15,9 +22,20 @@ License:	GPL
 Group:		Applications/Communications
 URL:		http://www.igniterealtime.org/
 BuildRequires:	ant
-BuildRequires:	java-sun
+BuildRequires:	java-commons-el
+BuildRequires:	java-commons-httpclient
+%{!?with_java_sun:BuildRequires:        java-gcj-compat-devel}
+BuildRequires:	java-servletapi5
+%{?with_java_sun:BuildRequires: java-sun}
+Buildrequires:	java-mail
+BuildRequires:	java-commons-lang
+BuildRequires:	java-commons-logging
+BuildRequires:	java-jdom
+BuildRequires:	rpm >= 4.4.9-56
+BuildRequires:	tomcat-jasper
 Requires:	java-sun
 Requires:	java-sun-jre-X11
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -36,8 +54,10 @@ cp %{SOURCE1} .
 %endif
 
 %build
+required_jars="ant commons-httpclient commons-el commons-lang commons-logging jasper-compiler jasper-runtime jdom jsp-api mail servletapi5 qdox"
 cd build
-%ant openfire
+CLASSPATH=lib/ant-jive-edition.jar:lib/ant-contrib.jar:lib/ant-subdirtask.jar:lib/xmltask.jar:lib/pack200task.jar:lib/merge/mina-core.jar:lib/merge/mina-filter-compression.jar:lib/merge/mina-filter-ssl.jar:lib/merge/dom4j.jar:lib/merge/xpp3.jar:lib/merge/proxool.jar:lib/merge/stringprep.jar:lib/merge/jetty.jar:lib/merge/jetty-util.jar:lib/merge/jetty-sslengine.jar:lib/merge/jzlib.jar:lib/merge/jstun-0.6.1.jar:lib/merge/shaj.jar:lib/dist/jdic.jar:lib/i4jruntime.jar:lib/merge/jmdns.jar:lib/dist/bouncycastle.jar:lib/merge/rome.jar:lib/merge/rome-fetcher.jar:lib/merge/jstl.jar:lib/merge/dbutil.jar:$(build-classpath $required_jars)
+%ant openfire -Dbuild.sysclasspath=only
 %ant -Dplugin=search plugin
 cd ..
 
@@ -102,7 +122,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/openfire/lib/*.jar
 %dir %{_datadir}/openfire/logs
 %dir %{_datadir}/openfire/plugins
-%{_datadir}/openfire/plugins/search.jar
+#%{_datadir}/openfire/plugins/search.jar
 %dir %{_datadir}/openfire/plugins/admin
 %{_datadir}/openfire/plugins/admin/*
 %dir %{_datadir}/openfire/resources
