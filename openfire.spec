@@ -2,6 +2,8 @@
 # TODO:
 # - PLDize init script
 # - PLDize at all...
+# - see %desc, does it really include jre?
+# - missing service restarts in post?
 # Conditional build:
 %if "%{pld_release}" == "ti"
 %bcond_without	java_sun	# build with gcj
@@ -9,12 +11,13 @@
 %bcond_with	java_sun	# build with java-sun
 %endif
 #
+%define		ver	%(echo %{version} | tr . _)
 Summary:	Openfire XMPP Server
 Name:		openfire
 Version:	3.6.4
 Release:	0.1
 # Source0 URL: http://www.igniterealtime.org/downloads/download-landing.jsp?file=openfire/openfire_src_3_6_4.tar.gz
-Source0:	%{name}_src_3_6_4.tar.gz
+Source0:	%{name}_src_%{ver}.tar.gz
 # Source0-md5:	0b5417368355045afbbfac4155efd988
 Source1:	%{name}.sysconfig
 Source2:	%{name}.init
@@ -102,10 +105,10 @@ ln -s /var/log/openfire $RPM_BUILD_ROOT%{_datadir}/openfire/logs
 rm -rf $RPM_BUILD_ROOT
 
 %preun
-	/sbin/chkconfig --del openfire
+/sbin/chkconfig --del openfire
 
 %post
-	/sbin/chkconfig --add openfire
+/sbin/chkconfig --add openfire
 
 %files
 %defattr(644,root,root,755)
