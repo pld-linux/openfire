@@ -35,7 +35,7 @@ BuildRequires:	rpm >= 4.4.9-56
 BuildRequires:	tomcat-jasper
 Requires:	java-sun
 Requires:	java-sun-jre-X11
-BuildArch:	noarch
+#BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
