@@ -1,13 +1,12 @@
 #
 # TODO:
 # - PLDize at all...
-# - missing service restarts in post?
 #
 %define		ver	%(echo %{version} | tr . _)
 Summary:	Openfire XMPP Server
 Name:		openfire
 Version:	3.6.4
-Release:	0.1
+Release:	1
 # Source0 URL: http://www.igniterealtime.org/downloads/download-landing.jsp?file=openfire/openfire_src_3_6_4.tar.gz
 Source0:	%{name}_src_%{ver}.tar.gz
 # Source0-md5:	0b5417368355045afbbfac4155efd988
@@ -52,7 +51,7 @@ CLASSPATH=lib/ant-jive-edition.jar:lib/ant-contrib.jar:lib/ant-subdirtask.jar:li
 
 export LC_ALL=en_US
 
-%ant -Dbuild.sysclasspath=only -Dno.jspc=true openfire 
+%ant -Dbuild.sysclasspath=only -Dno.jspc=true openfire
 %ant jspc
 %ant -Dplugin=search plugin
 cd ..
@@ -98,10 +97,14 @@ ln -s /var/log/openfire $RPM_BUILD_ROOT%{_datadir}/openfire/logs
 rm -rf $RPM_BUILD_ROOT
 
 %preun
-/sbin/chkconfig --del openfire
+if [ "$1" = "0" ]; then
+       %service -q %{name} stop
+       /sbin/chkconfig --del %{name}
+fi
 
 %post
-/sbin/chkconfig --add openfire
+/sbin/chkconfig --add %{name}
+%service %{name} restart
 
 %files
 %defattr(644,root,root,755)
