@@ -20,7 +20,7 @@ BuildRequires:	java-commons-el
 BuildRequires:	java-commons-httpclient
 BuildRequires:	java-servletapi5
 BuildRequires:	java-sun
-Buildrequires:	java-mail
+BuildRequires:	java-mail
 BuildRequires:	java-commons-lang
 BuildRequires:	java-commons-logging
 BuildRequires:	java-jdom
