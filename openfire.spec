@@ -19,15 +19,16 @@ BuildRequires:	ant
 BuildRequires:	java-commons-el
 BuildRequires:	java-commons-httpclient
 BuildRequires:	java-servletapi5
-BuildRequires:	java-sun
+BuildRequires:	jdk
 BuildRequires:	java-mail
 BuildRequires:	java-commons-lang
 BuildRequires:	java-commons-logging
 BuildRequires:	java-jdom
 BuildRequires:	java-qdox
 BuildRequires:	tomcat-jasper
-Requires:	java-sun
-Requires:	java-sun-jre-X11
+BuildConflicts:	java-gcj-compat
+Requires:	jre
+Requires:	jre-X11
 #BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
