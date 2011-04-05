@@ -21,12 +21,13 @@ BuildRequires:	java-commons-httpclient
 BuildRequires:	java-commons-lang
 BuildRequires:	java-commons-logging
 BuildRequires:	java-jdom
+BuildRequires:	java-log4j
 BuildRequires:	java-mail
 BuildRequires:	java-qdox
 BuildRequires:	java-servletapi
 BuildRequires:	java-slf4j
-BuildRequires:	jdk
 BuildRequires:	java-tomcat-jasper
+BuildRequires:	jdk
 BuildConflicts:	java-gcj-compat
 Requires:	jre
 Requires:	jre-X11
@@ -47,7 +48,7 @@ cp %{SOURCE1} .
 
 %build
 cd build
-required_jars="ant commons-httpclient commons-el commons-lang commons-logging jasper jdom jsp-api mail servlet-api slf4j-api qdox"
+required_jars="ant commons-httpclient commons-el commons-lang commons-logging jasper jdom jsp-api log4j mail servlet-api slf4j-api qdox"
 CLASSPATH=lib/ant-jive-edition.jar:lib/ant-contrib.jar:lib/ant-subdirtask.jar:lib/xmltask.jar:lib/pack200task.jar:lib/merge/mina-core.jar:lib/merge/mina-filter-compression.jar:lib/merge/mina-filter-ssl.jar:lib/merge/dom4j.jar:lib/merge/xpp3.jar:lib/merge/proxool.jar:lib/merge/stringprep.jar:lib/merge/jetty-http.jar:lib/merge/jetty-continuation.jar:lib/merge/jetty-util.jar:lib/merge/jetty-server.jar:lib/merge/jetty-servlet.jar:lib/merge/jetty-sslengine.jar:lib/merge/jetty-webapp.jar:lib/merge/jzlib.jar:lib/merge/jstun-0.6.1.jar:lib/merge/shaj.jar:lib/dist/jdic.jar:lib/i4jruntime.jar:lib/merge/jmdns.jar:lib/dist/bouncycastle.jar:lib/merge/rome.jar:lib/merge/rome-fetcher.jar:lib/merge/jstl.jar:lib/merge/dbutil.jar:lib/merge/standard.jar:lib/merge/tinder.jar:lib/merge/libidn.jar:$(build-classpath $required_jars)
 
 export LC_ALL=en_US
