@@ -1,35 +1,35 @@
 # TODO:
-# - noarch or no noarch? PASZCUZZ!
 # - FHS (configs in /etc, executables in /usr/(s)bin, discard the symlinks)
 #
 %define		ver	%(echo %{version} | tr . _)
 Summary:	Openfire XMPP Server
 Name:		openfire
-Version:	3.6.4
-Release:	1
-# Source0Download: http://www.igniterealtime.org/downloads/download-landing.jsp?file=openfire/openfire_src_3_6_4.tar.gz
-Source0:	%{name}_src_%{ver}.tar.gz
-# Source0-md5:	0b5417368355045afbbfac4155efd988
+Version:	3.7.0
+Release:	0.1
+# Source0Download: http://www.igniterealtime.org/downloads/download-landing.jsp?file=openfire/openfire_src_3_7_0.tar.gz
+Source0:	http://www.igniterealtime.org/downloadServlet?filename=openfire/openfire_src_3_7_0.tar.gz
+# Source0-md5:	df9820b33071e6154b0f2972a10f32de
+#Source0:	%{name}_src_%{ver}.tar.gz
 Source1:	%{name}.sysconfig
 Source2:	%{name}.init
-License:	GPL
+License:	Apache v2.0
 Group:		Applications/Communications
 URL:		http://www.igniterealtime.org/
 BuildRequires:	ant
 BuildRequires:	java-commons-el
 BuildRequires:	java-commons-httpclient
-BuildRequires:	java-servletapi5
-BuildRequires:	jdk
-BuildRequires:	java-mail
 BuildRequires:	java-commons-lang
 BuildRequires:	java-commons-logging
 BuildRequires:	java-jdom
+BuildRequires:	java-mail
 BuildRequires:	java-qdox
-BuildRequires:	tomcat-jasper
+BuildRequires:	java-servletapi
+BuildRequires:	java-slf4j
+BuildRequires:	jdk
+BuildRequires:	java-tomcat-jasper
 BuildConflicts:	java-gcj-compat
 Requires:	jre
 Requires:	jre-X11
-#BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -47,8 +47,8 @@ cp %{SOURCE1} .
 
 %build
 cd build
-required_jars="ant commons-httpclient commons-el commons-lang commons-logging jasper-compiler jasper-runtime jdom jsp-api mail servletapi5 qdox"
-CLASSPATH=lib/ant-jive-edition.jar:lib/ant-contrib.jar:lib/ant-subdirtask.jar:lib/xmltask.jar:lib/pack200task.jar:lib/merge/mina-core.jar:lib/merge/mina-filter-compression.jar:lib/merge/mina-filter-ssl.jar:lib/merge/dom4j.jar:lib/merge/xpp3.jar:lib/merge/proxool.jar:lib/merge/stringprep.jar:lib/merge/jetty.jar:lib/merge/jetty-util.jar:lib/merge/jetty-sslengine.jar:lib/merge/jzlib.jar:lib/merge/jstun-0.6.1.jar:lib/merge/shaj.jar:lib/dist/jdic.jar:lib/i4jruntime.jar:lib/merge/jmdns.jar:lib/dist/bouncycastle.jar:lib/merge/rome.jar:lib/merge/rome-fetcher.jar:lib/merge/jstl.jar:lib/merge/dbutil.jar:lib/merge/standard.jar:$(build-classpath $required_jars)
+required_jars="ant commons-httpclient commons-el commons-lang commons-logging jasper jdom jsp-api mail servlet-api slf4j-api qdox"
+CLASSPATH=lib/ant-jive-edition.jar:lib/ant-contrib.jar:lib/ant-subdirtask.jar:lib/xmltask.jar:lib/pack200task.jar:lib/merge/mina-core.jar:lib/merge/mina-filter-compression.jar:lib/merge/mina-filter-ssl.jar:lib/merge/dom4j.jar:lib/merge/xpp3.jar:lib/merge/proxool.jar:lib/merge/stringprep.jar:lib/merge/jetty-http.jar:lib/merge/jetty-continuation.jar:lib/merge/jetty-util.jar:lib/merge/jetty-server.jar:lib/merge/jetty-servlet.jar:lib/merge/jetty-sslengine.jar:lib/merge/jetty-webapp.jar:lib/merge/jzlib.jar:lib/merge/jstun-0.6.1.jar:lib/merge/shaj.jar:lib/dist/jdic.jar:lib/i4jruntime.jar:lib/merge/jmdns.jar:lib/dist/bouncycastle.jar:lib/merge/rome.jar:lib/merge/rome-fetcher.jar:lib/merge/jstl.jar:lib/merge/dbutil.jar:lib/merge/standard.jar:lib/merge/tinder.jar:lib/merge/libidn.jar:$(build-classpath $required_jars)
 
 export LC_ALL=en_US
 
@@ -56,8 +56,8 @@ export LC_ALL=en_US
 	-Dbuild.sysclasspath=only \
 	-Dno.jspc=true
 %ant jspc
-%ant plugin \
-	-Dplugin=search
+#%ant plugin \
+#	-Dplugin=search
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -121,8 +121,8 @@ fi
 %dir %{_datadir}/openfire/lib
 %{_datadir}/openfire/lib/*.jar
 %dir %{_datadir}/openfire/logs
-%dir %{_datadir}/openfire/plugins
-%{_datadir}/openfire/plugins/search.jar
+#%dir %{_datadir}/openfire/plugins
+#%{_datadir}/openfire/plugins/search.jar
 %dir %{_datadir}/openfire/plugins/admin
 %{_datadir}/openfire/plugins/admin/*
 %dir %{_datadir}/openfire/resources
