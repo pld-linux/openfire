@@ -4,11 +4,11 @@
 %define		ver	%(echo %{version} | tr . _)
 Summary:	Openfire XMPP Server
 Name:		openfire
-Version:	3.7.0
+Version:	3.7.1
 Release:	0.1
-# Source0Download: http://www.igniterealtime.org/downloads/download-landing.jsp?file=openfire/openfire_src_3_7_0.tar.gz
-Source0:	http://www.igniterealtime.org/downloadServlet?filename=openfire/openfire_src_3_7_0.tar.gz
-# Source0-md5:	df9820b33071e6154b0f2972a10f32de
+# Source0Download: http://www.igniterealtime.org/downloads/download-landing.jsp?file=openfire/openfire_src_3_7_1.tar.gz
+Source0:	http://www.igniterealtime.org/downloadServlet?filename=openfire/openfire_src_3_7_1.tar.gz
+# Source0-md5:	c8650cf8d58457ec960648527613e48b
 #Source0:	%{name}_src_%{ver}.tar.gz
 Source1:	%{name}.sysconfig
 Source2:	%{name}.init
@@ -57,8 +57,8 @@ export LC_ALL=en_US
 	-Dbuild.sysclasspath=only \
 	-Dno.jspc=true
 %ant jspc
-#%ant plugin \
-#	-Dplugin=search
+%ant plugin \
+	-Dplugin=search
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -122,7 +122,7 @@ fi
 %dir %{_datadir}/openfire/lib
 %{_datadir}/openfire/lib/*.jar
 %dir %{_datadir}/openfire/logs
-#%dir %{_datadir}/openfire/plugins
+%dir %{_datadir}/openfire/plugins
 #%{_datadir}/openfire/plugins/search.jar
 %dir %{_datadir}/openfire/plugins/admin
 %{_datadir}/openfire/plugins/admin/*
